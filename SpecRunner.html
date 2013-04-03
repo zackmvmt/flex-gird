@@ -1,0 +1,42 @@
+<html>
+	<head>
+		<title>Tests</title>
+        <link rel="stylesheet" href="./node_modules/mocha/mocha.css" />
+		<style type="text/css" media="screen">
+			.grid {
+				font-size: 14px;
+				font-weight 100;
+				margin-top: 25px;
+				padding-top: 20px;
+				border-top: 1px solid #888;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="mocha"></div>
+        <script src="./node_modules/mocha/mocha.js"></script>
+        <script src="./node_modules/chai/chai.js"></script>
+
+		<!-- FRONT-END FILES -->
+		<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+		<script src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.4.4/underscore-min.js"></script>
+		<script src="//cdnjs.cloudflare.com/ajax/libs/backbone.js/1.0.0/backbone-min.js"></script>
+
+		<script src="./src/app.js"></script>
+		<script src="./src/grid.view.js"></script>
+		<script src="./src/grid.row.view.js"></script>
+		<!-- END FRONT-END FILES -->
+
+        <script>
+            mocha.ui('bdd'); 
+            mocha.reporter('html');
+            var expect = chai.expect;
+        </script>
+        <script src="tests/dependancies.js"></script>
+        <script src="tests/grid.js"></script>
+        <script>
+            if (window.mochaPhantomJS) { mochaPhantomJS.run(); }
+            else { mocha.run(); }
+        </script>
+    </body>
+</html>
