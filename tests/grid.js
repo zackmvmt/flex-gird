@@ -1,7 +1,6 @@
 describe('Grid View', function() {
 
-	var grid;
-
+	// data set and common variables (abstract?)
 	var collection = new Backbone.Collection([
 		{ id: 1, name: 'Speak To Me/Breathe', length: '3:58' },
 		{ id: 2, name: 'On The Run', length: '3:33' },
@@ -14,40 +13,50 @@ describe('Grid View', function() {
 		{ id: 9, name: 'Eclipse', length: '2:07' }
 	]);
 
-	var headers = ['id', 'name', 'length'];
-
-	initGrid = function() {
-		grid = new App.View.Grid({
-			el: '.grid',
-			collection: collection,
-			headers: headers
-		});
-	};
+	var columns = ['id', 'name', 'length'];
 
 	$('body').append('<div class="grid"></div>');
+
+	var grid = new App.View.Grid({
+		el: '.grid',
+		collection: collection,
+		columns: columns
+	});
+
+	grid.render();
+
+	afterEach(function() {
+		grid.undelegateEvents();
+	});
 
 	it('exists', function() {
 		expect(App.View.Grid).not.to.be.undefined;
 	});
 
 	it('generates headers', function() {
-		initGrid();
-		grid.render();
-		// gather information about the rendered elements
-		var headerEls = $(grid.el).find('th');
-		// test
-		expect(headerEls.length).to.equal(3);
-		expect($(headerEls[0]).html()).to.equal(headers[0]);
-		// clear it out
-		grid.undelegateEvents();
+
+		var expected = [];
+		expected['num_headers'] = 3;
+		expected['first_header'] = 'id';
+
+		var actual = [];
+		actual['num_headers'] = $(grid.el).find('th').length;
+		actual['first_header'] = $(grid.el).find('th').first().html();
+		
+		expect(expected).to.deep.equal(actual);
+
 	});
 
 	it('lists out rows', function() {
-		initGrid();
-		grid.render();
-		// gather information about the rendered elements
-		// test
-		//clear it out
+
+		var expected = [];
+		expected['num_columns'] = 9;
+
+		var actual = [];
+		actual['num_columns'] = $(grid.el).find('tbody tr').length;
+
+		expect(expected).to.deep.equal(actual);
+
 	});
 
 	describe('Grid Row View', function() {
