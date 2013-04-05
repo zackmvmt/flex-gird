@@ -25,10 +25,6 @@ describe('Grid View', function() {
 
 	grid.render();
 
-	runTest = function(params) {
-		expect(params.expected).to.deep.equal(params.actual);
-	}
-
 	afterEach(function() {
 		grid.undelegateEvents();
 	});
@@ -39,52 +35,29 @@ describe('Grid View', function() {
 
 	it('generates headers', function() {
 
-		runTest({
-			expected: {
-				num_headers: 3,
-				first_header: 'id'
-			},
-			actual: {
-				num_headers: $(grid.el).find('th').length,
-				first_header: $(grid.el).find('th').first().html()
-			}
-		});
+		var expected = [];
+		expected['num_headers'] = 3;
+		expected['first_header'] = 'id';
+
+		var actual = [];
+		actual['num_headers'] = $(grid.el).find('th').length;
+		actual['first_header'] = $(grid.el).find('th').first().html();
+		
+		expect(expected).to.deep.equal(actual);
 
 	});
 
 	it('lists out rows', function() {
 
-		runTest({
-			expected: {
-				num_columns: 9
-			},
-			actual: {
-				num_columns: $(grid.el).find('tbody tr').length
-			}
-		});
+		var expected = [];
+		expected['num_columns'] = 9;
+
+		var actual = [];
+		actual['num_columns'] = $(grid.el).find('tbody tr').length;
+
+		expect(expected).to.deep.equal(actual);
 
 	});
-
-	it('can be sorted', function() {
-
-		grid.render(); // reset the grid
-		$(grid.el).find('th').eq(1).trigger('click');
-		$(grid.el).find('th').eq(1).css('color', 'red');
-
-		runTest({
-			expected: {
-				first_row_name: 'Any Colour You Like',
-				last_row_name: 'Us And Them'
-			},
-			actual: {
-				first_row_name: $(grid.el).find('tbody tr').first().find('td').eq(1).html(),
-				last_row_name: $(grid.el).find('tbody tr').last().find('td').eq(1).html()
-			}
-		});
-
-	});
-
-	it('can be sorted two directions');
 
 	describe('Grid Row View', function() {
 		
