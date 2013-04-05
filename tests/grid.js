@@ -52,6 +52,8 @@ describe('Grid View', function() {
 
 	});
 
+	it('can have custom header display names');
+
 	it('lists out rows', function() {
 
 		runTest({
@@ -91,6 +93,8 @@ describe('Grid View', function() {
 		it('exists', function() {
 			expect(App.View.Grid_Row).not.to.be.undefined;
 		});
+
+		it('can have custom functionality');
 
 	});
 
