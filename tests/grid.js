@@ -13,14 +13,16 @@ describe('Grid View', function() {
 		{ id: 9, name: 'Eclipse', length: '2:07' }
 	]);
 
-	var columns = ['id', 'name', 'length'];
-
 	$('body').append('<div class="grid"></div>');
 
 	var grid = new App.View.Grid({
 		el: '.grid',
 		collection: collection,
-		columns: columns
+		columns: [
+			{ name: 'id', display: '#' },
+			{ name: 'name', display: 'Album Name' },
+			{ name: 'length', display: 'Duration' }
+		]
 	});
 
 	grid.render();
@@ -28,6 +30,10 @@ describe('Grid View', function() {
 	runTest = function(params) {
 		expect(params.expected).to.deep.equal(params.actual);
 	}
+
+	beforeEach(function() {
+		grid.render();
+	});
 
 	afterEach(function() {
 		grid.undelegateEvents();
@@ -46,13 +52,26 @@ describe('Grid View', function() {
 			},
 			actual: {
 				num_headers: $(grid.el).find('th').length,
-				first_header: $(grid.el).find('th').first().html()
+				first_header: $(grid.el).find('th').first().attr('data')
 			}
 		});
 
 	});
 
-	it('can have custom header display names');
+	it('can have custom header display names', function() {
+		
+		runTest({
+			expected: {
+				first_header: '#',
+				second_header: 'Album Name'
+			},
+			actual: {
+				first_header: $(grid.el).find('th').eq(0).html(),
+				second_header: $(grid.el).find('th').eq(1).html()
+			}
+		});
+		
+	});
 
 	it('lists out rows', function() {
 
@@ -69,9 +88,7 @@ describe('Grid View', function() {
 
 	it('can be sorted', function() {
 
-		grid.render(); // reset the grid
 		$(grid.el).find('th').eq(1).trigger('click');
-		$(grid.el).find('th').eq(1).css('color', 'red');
 
 		runTest({
 			expected: {
@@ -86,7 +103,23 @@ describe('Grid View', function() {
 
 	});
 
-	it('can be sorted two directions');
+	it('can be sorted two directions', function() {
+		
+		$(grid.el).find('th').eq(1).trigger('click');
+		$(grid.el).find('th').eq(1).trigger('click');
+
+		runTest({
+			expected: {
+				first_row_name: 'Us And Them',
+				last_row_name: 'Any Colour You Like'
+			},
+			actual: {
+				first_row_name: $(grid.el).find('tbody tr').first().find('td').eq(1).html(),
+				last_row_name: $(grid.el).find('tbody tr').last().find('td').eq(1).html()
+			}
+		});
+
+	});
 
 	describe('Grid Row View', function() {
 		

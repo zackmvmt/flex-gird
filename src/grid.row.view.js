@@ -25,7 +25,7 @@ App.View.Grid_Row = Backbone.View.extend({
 		_.each(this.options.columns, function(column) {
 
 			dom += '<td>';
-			dom += this.model.get(column);
+			dom += this.model.get(column.name);
 			dom += '</td>';
 
 		}, this);

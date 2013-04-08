@@ -36,7 +36,7 @@ App.View.Grid = Backbone.View.extend({
 		dom += '<thead>';
 		dom += '<tr>';
 		_.each(this.options.columns, function(column) {
-			dom += '<th data="' + column + '">' + column + '</th>';
+			dom += '<th data-sort="" data="' + column.name + '">' + column.display + '</th>';
 		}, this);
 		dom += '</tr>';
 		dom += '</thead>';
@@ -56,10 +56,24 @@ App.View.Grid = Backbone.View.extend({
 	sort: function(e) {
 
 		var column = $(e.target).attr('data');
+		var sort = $(e.target).attr('data-sort');
 
 		this.rows = _.sortBy(this.rows, function(row) {
 			return row.model.get(column);
 		});
+
+		console.log('sort', sort);
+
+		if (sort == '' || sort == 'desc') {
+
+			$(e.target).attr('data-sort', 'asc');
+
+		} else if (sort == 'asc') {
+
+			$(e.target).attr('data-sort', 'desc');
+			this.rows.reverse();
+
+		}
 
 		this.render();
 
