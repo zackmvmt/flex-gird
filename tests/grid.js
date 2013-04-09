@@ -21,7 +21,8 @@ describe('Grid View', function() {
 		columns: [
 			{ name: 'id', display: '#' },
 			{ name: 'name', display: 'Album Name' },
-			{ name: 'length', display: 'Duration' }
+			{ name: 'length', display: 'Duration' },
+			{ custom: true, display: 'Action' }
 		]
 	});
 
@@ -45,22 +46,24 @@ describe('Grid View', function() {
 
 	it('generates headers', function() {
 
-		runTest({
+		var test = {
 			expected: {
-				num_headers: 3,
+				num_headers: 4,
 				first_header: 'id'
 			},
 			actual: {
 				num_headers: $(grid.el).find('th').length,
 				first_header: $(grid.el).find('th').first().attr('data')
 			}
-		});
+		};
+
+		runTest(test);
 
 	});
 
 	it('can have custom header display names', function() {
 		
-		runTest({
+		var test = {
 			expected: {
 				first_header: '#',
 				second_header: 'Album Name'
@@ -69,20 +72,24 @@ describe('Grid View', function() {
 				first_header: $(grid.el).find('th').eq(0).html(),
 				second_header: $(grid.el).find('th').eq(1).html()
 			}
-		});
+		};
+
+		runTest(test);
 		
 	});
 
 	it('lists out rows', function() {
 
-		runTest({
+		var test = {
 			expected: {
 				num_columns: 9
 			},
 			actual: {
 				num_columns: $(grid.el).find('tbody tr').length
 			}
-		});
+		};
+
+		runTest(test);
 
 	});
 
@@ -90,7 +97,7 @@ describe('Grid View', function() {
 
 		$(grid.el).find('th').eq(1).trigger('click');
 
-		runTest({
+		var test = {
 			expected: {
 				first_row_name: 'Any Colour You Like',
 				last_row_name: 'Us And Them'
@@ -99,16 +106,17 @@ describe('Grid View', function() {
 				first_row_name: $(grid.el).find('tbody tr').first().find('td').eq(1).html(),
 				last_row_name: $(grid.el).find('tbody tr').last().find('td').eq(1).html()
 			}
-		});
+		};
+
+		runTest(test);
 
 	});
 
 	it('can be sorted two directions', function() {
 		
-		$(grid.el).find('th').eq(1).trigger('click');
-		$(grid.el).find('th').eq(1).trigger('click');
+		$(grid.el).find('th').eq(1).trigger('click').delay(10).trigger('click');
 
-		runTest({
+		var test = {
 			expected: {
 				first_row_name: 'Us And Them',
 				last_row_name: 'Any Colour You Like'
@@ -117,7 +125,24 @@ describe('Grid View', function() {
 				first_row_name: $(grid.el).find('tbody tr').first().find('td').eq(1).html(),
 				last_row_name: $(grid.el).find('tbody tr').last().find('td').eq(1).html()
 			}
-		});
+		};
+
+		runTest(test);
+
+	});
+
+	it('can have custom columns', function() {
+
+		var test = {
+			expected: {
+				last_column: 'Action'
+			},
+			actual: {
+				last_column: $(grid.el).find('thead th').last().html()
+			}
+		};
+
+		runTest(test);
 
 	});
 
