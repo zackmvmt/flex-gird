@@ -22,7 +22,31 @@ describe('Grid View', function() {
 			{ name: 'id', display: '#' },
 			{ name: 'name', display: 'Album Name' },
 			{ name: 'length', display: 'Duration' },
-			{ custom: true, display: 'Action' }
+			{ custom: true, name: 'action', display: 'Action', content: {
+				format: 'raw',
+				data: '<span class="btn show">color</span> | <span class="btn time">time</span>'
+			} }
+		],
+		events: [
+			{
+				e: 'click',
+				target: '.show',
+				action: function(e) {
+					var tr = $(this).parents('tr');
+					tr.css('color', 'red');
+				}
+			},
+			{
+				e: 'click',
+				target: '.time',
+				action: function(e) {
+					var id = $(this).parents('tr').attr('data');
+					var model = grid.collection.get(id);
+					var view = _.find(grid.rows, function(row) { return row.model == model; });
+					model.set('length', '4:44');
+					view.render();
+				}
+			}
 		]
 	});
 
@@ -152,7 +176,56 @@ describe('Grid View', function() {
 			expect(App.View.Grid_Row).not.to.be.undefined;
 		});
 
-		it('can have custom functionality');
+		it('can have custom content', function() {
+
+			var test = {
+				expected: {
+					custom_cell_btns: 2
+				},
+				actual: {
+					custom_cell_btns: $(grid.el).find('tbody tr').first().find('td').last().find('.btn').length
+				}
+			};
+
+			runTest(test);
+
+		});
+
+		it('can have custom events', function() {
+
+			$(grid.el).find('tbody tr').first().find('td').last().find('.show').trigger('click');
+
+			var test = {
+				expected: {
+					row_color: 'rgb(255, 0, 0)'
+				},
+				actual: {
+					row_color: $(grid.el).find('tbody tr').first().css('color')
+				}
+			};
+
+			runTest(test);
+
+		});
+
+		it('can have events that access the model', function() {
+
+			$(grid.el).find('tbody tr').eq(1).find('td').last().find('.time').trigger('click');
+			
+			var test = {
+				expected: {
+					new_time: '4:44'
+				},
+				actual: {
+					new_time: $(grid.el).find('tbody tr').eq(1).find('td').eq(2).html()
+				}
+			};
+			
+			runTest(test);
+
+		});
+
+		it('can have custom content that access the model');
 
 	});
 

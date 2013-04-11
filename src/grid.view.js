@@ -14,7 +14,8 @@ App.View.Grid = Backbone.View.extend({
 			return new App.View.Grid_Row({
 				model: model,
 				renderEngine: this.renderEngine,
-				columns: this.options.columns
+				columns: this.options.columns,
+				events: this.options.events
 			});
 		}, this);
 
@@ -36,12 +37,18 @@ App.View.Grid = Backbone.View.extend({
 		dom += '<thead>';
 		dom += '<tr>';
 		_.each(this.options.columns, function(column) {
-			dom += '<th data="' + column.name + '"';
-			dom += ' data-sort="';
-			if (column.name == this.sortName) {
-				dom += this.sortDir;
+			dom += '<th class="' + column.name + '"';
+			if (column.custom) {
+				dom += '>' + column.display + '</th>';
+			} else {
+				dom += ' data="' + column.name + '"';
+				dom += ' data-sort="';
+				if (column.name == this.sortName) {
+					dom += this.sortDir;
+				}
+				dom += '">' + column.display + '</th>';
+
 			}
-			dom += '">' + column.display + '</th>';
 		}, this);
 		dom += '</tr>';
 		dom += '</thead>';
@@ -61,8 +68,11 @@ App.View.Grid = Backbone.View.extend({
 	sort: function(e) {
 
 		var column = $(e.target).attr('data');
+
+		// cant sort custom columns
+		if (column == undefined) return false; 
+
 		this.sortName = column;
-		
 		var dir = $(e.target).attr('data-sort');
 
 		this.rows = _.sortBy(this.rows, function(row) {
@@ -79,6 +89,7 @@ App.View.Grid = Backbone.View.extend({
 			this.rows.reverse();
 
 		}
+
 
 		this.render();
 
